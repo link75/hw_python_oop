@@ -158,7 +158,7 @@ def read_package(workout_type: str, data: list) -> Training:
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking,
-        }
+    }
 
     action, duration, weight, *other = data
 
