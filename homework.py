@@ -49,21 +49,14 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        training_type: str = type(self).__name__
-        duration: float = self.duration
-        distance: float = self.get_distance()
-        speed: float = self.get_mean_speed()
-        calories: float = self.get_spent_calories()
-        return InfoMessage(training_type, duration, distance, speed, calories)
+        return InfoMessage(type(self).__name__, self.duration,
+                           self.get_distance(), self.get_mean_speed(),
+                           self.get_spent_calories())
 
 
 @dataclass
 class Running(Training):
     """Тренировка: бег."""
-
-    action: int
-    duration: float
-    weight: float
 
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
@@ -82,8 +75,6 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
-    action: int
-    duration: float
     height: float
 
     CALORIES_WEIGHT_MULTIPLIER_1 = 0.035
@@ -95,7 +86,6 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий при спортивной ходьбе."""
         speed_in_ms: float = self.get_mean_speed() * self.KMH_TO_MS
         self.height = self.height / self.HEIGHT_TO_METERS
-
         calories: float = ((self.CALORIES_WEIGHT_MULTIPLIER_1 * self.weight
                            + (speed_in_ms**2 / self.height)
                            * self.CALORIES_WEIGHT_MULTIPLIER_2
@@ -108,9 +98,6 @@ class SportsWalking(Training):
 class Swimming(Training):
     """Тренировка: плавание."""
 
-    action: int
-    duration: float
-    weight: float
     length_pool: float
     count_pool: float
 
@@ -143,8 +130,8 @@ def read_package(workout_type: str, data: list[float]) -> Training:
 
     if workout_type in training_classes:
         return training_classes[workout_type](*data)
-    else:
-        raise ValueError('Ошибка! Передан неизвестный тип тренировки.')
+
+    raise ValueError('Ошибка! Передан неизвестный тип тренировки.')
 
 
 def main(training: Training) -> None:
